@@ -21,8 +21,23 @@ do
 	if ! id $user >/dev/null 2>&1; then
 		echo " user "$user" is creating ..."
 		useradd -m -g "$group" -s /bin/bash "$user"
+		password=$(openssl rand -base64 8)
+		echo "$user:$password" | chpasswd
+		echo "$user,$password" >> passwords.txt
+		echo "Now, Users have password too"
 	else
-		echo "user "$user" exists, skip!!!!!!!!!!!!!!!111"
+		status=$(passwd -S "$user" | awk '{print $2}')
+		if [ "$status" != "P" ]; then
+			echo "user "$user" doesn't have password, we set for it"
+			echo "password generating .....!"
+			password=$(openssl rand -base64 8)
+			echo "$user:$password" | chpasswd
+			echo "$user,$password" >> passwords.txt
+			echo " Now, old users has password too!"
+		else
+			echo "user "$user" already has password :D"
+		fi
 	fi
 
 done < "$file"
+
