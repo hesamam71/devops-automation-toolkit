@@ -1,0 +1,6 @@
+google.com
+github.com
+fake-site.com
+microsoft.com
+cafekarzin.com
+blacksheepcoffee.com
